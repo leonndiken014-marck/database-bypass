@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL OVERRIDE v8.0.4</title>
+    <style>
+        :root { --neon: #00ff41; --bg: #050505; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; }
+
+        .terminal-card { background: rgba(10, 10, 10, 0.95); padding: 30px; border: 2px solid var(--neon); border-radius: 5px; box-shadow: 0 0 20px var(--neon); width: 90%; max-width: 500px; position: relative; }
+        .terminal-header { border-bottom: 1px solid var(--neon); margin-bottom: 15px; padding-bottom: 5px; font-weight: bold; display: flex; justify-content: space-between; }
+        
+        input { background: transparent; border: 1px solid var(--neon); color: var(--neon); width: 100%; padding: 10px; box-sizing: border-box; margin: 10px 0; outline: none; }
+        button { background: var(--neon); color: black; border: none; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: white; box-shadow: 0 0 15px white; }
+
+        #logBox { background: rgba(0,0,0,0.5); padding: 10px; height: 150px; overflow-y: auto; font-size: 11px; border: 1px solid #111; margin-top: 15px; }
+        .log-red { color: #ff3e3e; }
+        .progress-bar { height: 5px; background: #111; width: 100%; margin-top: 10px; position: relative; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--neon); width: 0%; transition: 0.1s; }
+        
+        /* Scanline effect */
+        .terminal-card::after { content: " "; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+    </style>
+</head>
+<body oncontextmenu="return false" onkeydown="return false">
+
+<canvas id="matrix-bg"></canvas>
+
+<div class="terminal-card">
+    <div class="terminal-header">
+        <span>CORE_INJECTOR_V8</span>
+        <span>STATUS: ACTIVE</span>
+    </div>
+
+    <p style="font-size: 12px;">TARGET_DATABASE: <b>SERVER_GAMES_MAIN</b></p>
+    
+    <input type="text" id="targetID" placeholder="[MASUKKAN USERNAME/ID TARGET]">
+    <input type="number" id="qty" placeholder="[JUMLAH DIAMOND/POIN]">
+    
+    <button id="btnStart" onclick="startSequence()">EXECUTE OVERRIDE</button>
+
+    <div class="progress-bar" id="pBar">
+        <div class="progress-fill" id="pFill"></div>
+    </div>
+
+    <div id="logBox">
+        <div>> System standby...</div>
+    </div>
+</div>
+
+<script>
+    // --- KEAMANAN PALSU (Bikin Hecker Penasaran) ---
+    // API_KEY: 0x4f2a_REDACTED_SECURE_V8
+    const _0x12f4 = ["Bypassing Firewall...", "Tunneling SSL...", "Injecting SQL Payload...", "Cracking RSA 4096...", "Accessing Database Root...", "Patching Security Guard...", "SUCCESS: Resources Injected."];
+    
+    // Matrix Effect
+    const canvas = document.getElementById('matrix-bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+    for(let x = 0; x < columns; x++) drops[x] = 1;
+
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#0F0";
+        ctx.font = fontSize + "px arial";
+        for(let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 33);
+
+    // Sequence Logic
+    function addLog(text, color = '') {
+        const box = document.getElementById('logBox');
+        const entry = document.createElement('div');
+        entry.innerHTML = `> ${text}`;
+        if(color) entry.className = color;
+        box.appendChild(entry);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function startSequence() {
+        const id = document.getElementById('targetID').value;
+        if(!id) return alert("TARGET_ID NULL!");
+
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('pBar').style.display = 'block';
+        
+        let i = 0;
+        const interval = setInterval(() => {
+            if(i < _0x12f4.length) {
+                addLog(_0x12f4[i]);
+                document.getElementById('pFill').style.width = ((i+1) * 14) + "%";
+                i++;
+            } else {
+                clearInterval(interval);
+                setTimeout(() => {
+                    alert("PRANK! 🤣\n\nGak ada Diamond gratis bro, kerja woi!");
+                    location.reload();
+                }, 1000);
+            }
+        }, 1500);
+    }
+
+    // Jebakan Hacker (Detect DevTools)
+    setInterval(() => {
+        const threshold = 160;
+        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+            addLog("!! WARNING: EXTERNAL_INTERFERENCE DETECTED !!", "log-red");
+            addLog("!! TRACING IP ADDRESS... !!", "log-red");
+            addLog("!! REPORTING TO AUTHORITIES... !!", "log-red");
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>
